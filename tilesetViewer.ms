@@ -75,18 +75,13 @@ __DEMO__ = function; end function
 
 if locals == globals then
 	
-	TILESHEET_TILE_SIZE = 64
+	clear
 	
-	tileSheet = file.loadImage("sokoban_tilesheet.png")
-	
-	// -- Setup tile display
 	display(6).mode = displayMode.tile
 	tileDisp = display(6)
-	tileDisp.tileSet = tileSheet
-	tileDisp.tileSetTileSize = TILESHEET_TILE_SIZE
-	tileDisp.cellSize = TILE_SIZE
+	tileDisp.tileSet = file.loadImage("sokoban_tilesheet.png")
+	tileDisp.tileSetTileSize = 64
 	
-	clear
 	tileDisp.clear
 	
 	viewTileSet tileDisp
