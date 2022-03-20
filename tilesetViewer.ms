@@ -56,13 +56,12 @@ _drawContents = function(g,tileDisp)
 	// Draw tileSet
 	g.drawImage pic, bottomLeftX, bottomLeftY
 	
-	// Draw boxes with index labels
+	// Draw index labels
 	idx = 0
 	for row in range(1,rows)
 		for col in range(1,cols)
 			x = bottomLeftX + tileSize * (col - 1)
 			y = bottomLeftY + tileSize * (rows - 1 - (row - 1))
-			g.drawRect x,y,tileSize,tileSize,color.rgba(255,255,255,180)
 			g.print idx,x+7,tileSize-20+y+1,color.black,"small"
 			g.print idx,x+5,tileSize-20+y+2,color.white,"small"
 			idx = idx + 1
