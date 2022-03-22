@@ -1,34 +1,70 @@
 
 // TODO: handle tileSets bigger than the display
 
-viewTileSet = function(tileDisp)
-	_checkTileDisplay tileDisp
-	_viewTileSet tileDisp
+// Parameter "obj" can be:
+// - a TileDisplay
+// - an Image
+// - a path (string)
+// If not a TileDisplay, then a tileSize is required
+viewTileSet = function(obj,tileSize=null)
+	if obj isa TileDisplay then
+		tileDisp = obj
+		_checkTileDisplay tileDisp,tileSize
+		image = tileDisp.tileSet
+		if tileSize then 
+			resolvedTileSize = tileSize
+		else
+			resolvedTileSize = tileDisp.tileSetTileSize
+		end if
+		_viewTileSet image,resolvedTileSize
+		exit
+	else 
+		_checkTileSize tileSize
+		if obj isa Image then
+			image = obj
+			_viewTileSet image,tileSize
+		else if obj isa string then
+			path = obj
+			image = file.loadImage(path)
+			_checkImage image, path
+			_viewTileSet image,tileSize
+		end if
+	end if
 end function
 
-_checkTileDisplay = function(tileDisp)
-	if not tileDisp isa TileDisplay then
-		print "Parameter must be a TileDisplay"
-		exit
-	end if
+_checkTileDisplay = function(tileDisp,tileSize)
 	if not tileDisp.tileSet then
 		print "Property tileSet of TileDisplay not set"
 		exit
 	end if
-	if not tileDisp.tileSetTileSize then
-		print "Property tileSetTileSize of TileDisplay not set"
+	if not tileDisp.tileSetTileSize and not tileSize then
+		print "Required value: either TileDisplay.tileSetTileSize or parameter tileSize"
 		exit
 	end if
 end function
 
-_viewTileSet = function(tileDisp)
+_checkImage = function(image, path)
+	if not image then
+		print "Could not load image from: " + path
+		exit
+	end if
+end function
+
+_checkTileSize = function(tileSize)
+	if not tileSize then
+		print "Parameter tileSize must be set"
+		exit
+	end if
+end function
+
+_viewTileSet = function(image,tileSize)
 	// Prepare display
 	prevDisp = display(0)
 	g = new PixelDisplay
 	g.install 0
 	g.clear "#00000088"
 	// Draw contents
-	_drawContents(g,tileDisp)
+	_drawContents(g,image,tileSize)
 	// Wait for key
 	text.delimiter = ""
 	text.inverse = true
@@ -44,17 +80,15 @@ _viewTileSet = function(tileDisp)
 	text.delimiter = char(13)		
 end function
 
-_drawContents = function(g,tileDisp)
-	pic = tileDisp.tileSet
-	tileSize = tileDisp.tileSetTileSize
-	cols = pic.width / tileSize
-	rows = pic.height / tileSize
+_drawContents = function(g,image,tileSize)
+	cols = image.width / tileSize
+	rows = image.height / tileSize
 	
-	bottomLeftX = 960/2-pic.width/2
-	bottomLeftY = 640/2-pic.height/2
+	bottomLeftX = 960/2-image.width/2
+	bottomLeftY = 640/2-image.height/2
 	
 	// Draw tileSet
-	g.drawImage pic, bottomLeftX, bottomLeftY
+	g.drawImage image, bottomLeftX, bottomLeftY
 	
 	// Draw index labels
 	idx = 0
@@ -77,12 +111,16 @@ if locals == globals then
 	
 	clear
 	
+	path = "sokoban_tilesheet.png"
+	image = file.loadImage(path)
+	tileSize = 64
+	
 	display(6).mode = displayMode.tile
 	tileDisp = display(6)
-	tileDisp.tileSet = file.loadImage("sokoban_tilesheet.png")
-	tileDisp.tileSetTileSize = 64
+	tileDisp.tileSet = image
+	tileDisp.tileSetTileSize = tileSize
 	
 	tileDisp.clear
 	
-	viewTileSet tileDisp
+	viewTileSet image,tileSize
 end if
