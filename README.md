@@ -1,26 +1,33 @@
 # Tileset Viewer
 
-A little tileset viewer tool for the Mini Micro
+A little tileset viewer tool for the Mini Micro.
+
+This module can be used to display a tile-set together with the corresponding tile indexes. 
+
+Very useful when referencing tiles in a TileDisplay.
 
 ## Usage
 
-This tool needs an already-configured TileDisplay. In particular what needs to be configured is:
+The entry-function `viewTileSet` of this module can invoked in three different ways:
 
-- The tileSet (image)
-- The tileSetTileSize 
+1. Passing an already-configured TileDisplay (see below).
+2. Passing an image (of a tile-set) and a tile-size
+3. Passing a path to an image (of a tile-set) and a tile-size
 
-When invoking the main function `viewTileSet` the already-configured TileDisplay is passed as a parameter.
-
-Then, the tileset image is displayed together with the corresponding tile-index numbers.
+Then, the tile-set image is displayed together with the corresponding tile-index numbers.
 
 ![Tool showing indexed tiles](screenshot.png)
 
 This makes it easy to know which index to use for which tile image.
 
+NOTE: when passing a TileDisplay the following properties need to be set:
+
+- The tileSet (image)
+- The tileSetTileSize
 
 ## Installation
 
-This tool can be used as a stand-alone program, but it really shines when imported as a module on system startup. That way it is always "present" and can be invoked  without replacing a loaded program.
+This module can be used as a stand-alone program, but it really shines when imported as a module on system startup and exposing its entry-function. That way it is always "present" and can be invoked  without replacing a loaded program.
 
 In order to do so the file `tilesetViewer.ms` has to be put somewhere where it can be imported as a module. Preferably under 
 
